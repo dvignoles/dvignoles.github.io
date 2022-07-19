@@ -25,7 +25,7 @@ I'd like to:
 * Host tbd personal projects 
 * Continue to learn about linux
 
-This following is part guide, part personal brain dump. 
+The following is part guide, part personal brain dump. 
 I relied heavily on documentation provided by existing pi cluster projects, I'd highly recommend checking them out first and foremost!
 
 [Building a raspberry pi hadoop spark cluster](https://dev.to/awwsmm/building-a-raspberry-pi-hadoop-spark-cluster-8b2)
@@ -34,6 +34,7 @@ I relied heavily on documentation provided by existing pi cluster projects, I'd 
 
 [How to build a Raspberry Pi Kubernetes Cluster with k3s](https://medium.com/thinkport/how-to-build-a-raspberry-pi-kubernetes-cluster-with-k3s-76224788576c)
 
+[Creating an Apache Spark Cluster with Raspberry Pi Workers](https://scott-ralph.medium.com/creating-an-apache-spark-cluster-with-raspberry-pi-workers-472c2c9a19ce)
 
 ## Supplies
 
@@ -60,7 +61,7 @@ For our operating system we are using raspberry pi os. Download the lite version
 
 Rather than duplicate much of the setup process on each pi, we will configure one pi and then use that as our base image for all the others. 
 
-Use `lsblk` to find your sd card on your system. In my case, this was `/dev/sde`. Double check you have the right reference, or you will end up overwriting another of your drives when copying over the image. The image in this case is compressed with `xz`, so we decompress and pipe into `dd`.
+Use `lsblk` to find your sd card block device on your system. In my case, this was `/dev/sde`. Double check you have the right reference, or you will end up overwriting another of your drives when copying over the image. The image in this case is compressed with `xz`, so we decompress and pipe into `dd`.
 
 ```sh
     xz -dc 2022-04-04-raspios-bullseye-arm64-lite.img.xz | sudo dd of=/dev/sde status=progress
@@ -155,8 +156,7 @@ sh -c "$(curl -fsLS git.io/chezmoi)" -- init dvignoles/mes-dossiers
 ~/bin/chezmoi apply ~/.zshrc ~/.aliases ~/.Xresources ~/.bashrc ~/.gitconfig ~/.tmux.conf ~/.tmux.remote.conf ~/.vimrc ~/.zshenv
 
 # github access
-# generate key
-ssh-keygen -t ed25519 -C "dvignoles@gmail.com"
+ssh-keygen -t ed25519 -C "<youremail@email.com>"
 # add key to github account https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account
 
 touch ~/.ssh/config
@@ -212,6 +212,7 @@ static domain_name_servers=192.168.50.1 8.8.8.8
 # 10.1.2.101 pi101
 10.1.2.103 pi103
 10.1.2.105 pi105
+10.1.2.107 pi107
 ```
 
 ```
@@ -253,7 +254,7 @@ Host pi107
 
 ```sh
 scp ~/.ssh/authorized_keys pi10X:~/.ssh/authorized_keys
-scp ~/.ssh/config piXX:~/.ssh/config
+scp ~/.ssh/config pi10X:~/.ssh/config
 ```
 
 You should now be able to ssh between all pis, try it out to confirm!
@@ -265,7 +266,6 @@ Setting up kubernetes with k3s is actually super simple using the provided [inst
 
 ```sh
 # master
-curl -sfL https://get.k3s.io | sh -
  curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC=" --flannel-iface=eth0" sh -
 # get k3s token
 sudo cat /var/lib/rancher/k3s/server/node-token
@@ -274,7 +274,7 @@ sudo reboot
 ---- 
 # On worker nodes
 # Use static ip
- curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC=" --flannel-iface=eth0" K3S_URL=https://10.1.2.101:6443 K3S_TOKEN=mynodeotken sh -
+ curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC=" --flannel-iface=eth0" K3S_URL=https://<master-ip>:6443 K3S_TOKEN=<mynodetoken> sh -
 
 sudo reboot
 ```
@@ -299,4 +299,5 @@ Next we will:
 
 1. Install a cluster monitoring dashboard
 2. Decide on a backup solution for the cluster
-3. Start one of those tbd projects?
+3. Setup Spark / HDFS
+4. Start one of those tbd projects?

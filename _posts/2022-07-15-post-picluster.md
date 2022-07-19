@@ -188,78 +188,78 @@ With all our nodes up and running, it's time to individually configure their net
 
 **On each pi:**
 
-##### 1. Set up static ips in `/etc/dhcpd.conf`. 
+1. Set up static ips in `/etc/dhcpd.conf`. 
 
-```
-# local cluster networking
-interface eth0
-static ip_address=10.1.2.103/24
+    ```
+    # local cluster networking
+    interface eth0
+    static ip_address=10.1.2.103/24
 
-# home wifi networking
-interface wlan0
-static ip_address=192.168.50.103/24
-static routers=192.168.50.1
-static domain_name_servers=192.168.50.1 8.8.8.8
-```
+    # home wifi networking
+    interface wlan0
+    static ip_address=192.168.50.103/24
+    static routers=192.168.50.1
+    static domain_name_servers=192.168.50.1 8.8.8.8
+    ```
 
-##### 2. Edit `/etc/hosts` and `/etc/hostname`.
+2. Edit `/etc/hosts` and `/etc/hostname`.
 
-```
-# /etc/hosts
-127.0.1.1               pi101
+    ```
+    # /etc/hosts
+    127.0.1.1               pi101
 
-# exclude the pi you are operating on
-# 10.1.2.101 pi101
-10.1.2.103 pi103
-10.1.2.105 pi105
-10.1.2.107 pi107
-```
+    # exclude the pi you are operating on
+    # 10.1.2.101 pi101
+    10.1.2.103 pi103
+    10.1.2.105 pi105
+    10.1.2.107 pi107
+    ```
 
-```
-# /etc/hostname
-pi101
-```
+    ```
+    # /etc/hostname
+    pi101
+    ```
 
-##### 3. Setup ssh keys
+3. Setup ssh keys
 
-```sh
-ssh-keygen -t rsa -b 4096
-ssh-copy-id pi101
-```
+    ```sh
+    ssh-keygen -t rsa -b 4096
+    ssh-copy-id pi101
+    ```
 
 **On pi 1 only:**
 
-##### 1. Add pi aliases to your `~/.ssh/config`
+1. Add pi aliases to your `~/.ssh/config`
 
-```
-# ~/.ssh/config
-Host pi101
-    User pi
-    Hostname 10.1.2.101
+    ```
+    # ~/.ssh/config
+    Host pi101
+        User pi
+        Hostname 10.1.2.101
 
-Host pi103
-    User pi
-    Hostname 10.1.2.103
+    Host pi103
+        User pi
+        Hostname 10.1.2.103
 
-Host pi105
-    User pi
-    Hostname 10.1.2.105
+    Host pi105
+        User pi
+        Hostname 10.1.2.105
 
-Host pi107
-    User pi
-    Hostname 10.1.2.107
-```
+    Host pi107
+        User pi
+        Hostname 10.1.2.107
+    ```
 
-##### 2. Copy config and authorized keys to all other pis
+2. Copy config and authorized keys to all other pis
 
-```sh
-scp ~/.ssh/authorized_keys pi10X:~/.ssh/authorized_keys
-scp ~/.ssh/config pi10X:~/.ssh/config
-```
+    ```sh
+    scp ~/.ssh/authorized_keys pi10X:~/.ssh/authorized_keys
+    scp ~/.ssh/config pi10X:~/.ssh/config
+    ```
 
-You should now be able to ssh between all pis, try it out to confirm!
+    You should now be able to ssh between all pis, try it out to confirm!
 
-`ssh pi10x`
+    `ssh pi10x`
 
 ## Kubernetes
 Setting up kubernetes with k3s is actually super simple using the provided [install scripts](https://rancher.com/docs/k3s/latest/en/quick-start/). The printout post installation prompted me to edit `/boot/cmdline`, so look out for that. As we have both ethernet and wifi networking between the pis, we ensure the cluster uses the ethernet networking by specifying the flannel CNI interface. 

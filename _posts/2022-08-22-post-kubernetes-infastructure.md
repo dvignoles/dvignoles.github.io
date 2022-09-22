@@ -10,7 +10,7 @@ tags:
   - flux
 ---
 
-> Setting up a load balancer, ingress controller, wildcard tls, distributed storage, and rancher!)
+> Setting up a load balancer, ingress controller, wildcard tls, distributed storage, and rancher!
 
 When running Kubernetes on bare metal, key infrastructure is missing out of the box. 
 

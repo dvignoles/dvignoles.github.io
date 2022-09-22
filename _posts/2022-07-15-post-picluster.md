@@ -14,16 +14,16 @@ tags:
 
 ## Motivation
 
-One my favorite experiences during undergrad was working on a university big data cluster running apache spark and hdfs. There's something magical about writing and running distributed computations, like watching a well choreographed performance that you designed. I decided to build my own cluster using raspberry pis in order to capture that magic without breaking the bank. 
+One my favorite experiences during undergrad was working on a university big data cluster running apache spark and hdfs. I decided to build my own cluster using raspberry pis in order to get more hands on experience with distributed computing, containerization, and devops. 
 
 My intention is that this little pi cluster serve as a mini homelab and learning environment. 
 
 I'd like to:
 
-* Get more hands on experience with Apache Spark
 * Play with Kubernetes
-* Host tbd personal projects 
-* Continue to learn about linux
+* Host TBD personal projects 
+* Continue to learn about linux & devops
+* Examine the feasibility (or perhaps advisability?) of self hosting Apache Spark
 
 The following is part guide, part personal brain dump. 
 I relied heavily on documentation provided by existing pi cluster projects, I'd highly recommend checking them out first and foremost!
@@ -262,11 +262,11 @@ With all our nodes up and running, it's time to individually configure their net
     `ssh pi10x`
 
 ## Kubernetes
-Setting up kubernetes with k3s is actually super simple using the provided [install scripts](https://rancher.com/docs/k3s/latest/en/quick-start/). The printout post installation prompted me to edit `/boot/cmdline`, so look out for that. As we have both ethernet and wifi networking between the pis, we ensure the cluster uses the ethernet networking by specifying the flannel CNI interface. 
+Setting up kubernetes with k3s is actually super simple using the provided [install scripts](https://rancher.com/docs/k3s/latest/en/quick-start/). The printout post installation prompted me to edit `/boot/cmdline`, so look out for that. As we have both ethernet and wifi networking between the pis, we ensure the cluster uses the ethernet networking by specifying the flannel CNI interface. The built in load balaner and ingress controller are disabled because we will be setting up our solution. We also pin the k3s version to be compatibile with the latest rancher release. 
 
 ```sh
 # master
- curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC=" --flannel-iface=eth0" sh -
+ curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC=" --flannel-iface=eth0 --disable servicelb --disable traefik" INSTALL_K3S_VERSION="1.23.9+k3s1" sh -
 # get k3s token
 sudo cat /var/lib/rancher/k3s/server/node-token
 
@@ -274,7 +274,7 @@ sudo reboot
 ---- 
 # On worker nodes
 # Use static ip
- curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC=" --flannel-iface=eth0" K3S_URL=https://<master-ip>:6443 K3S_TOKEN=<mynodetoken> sh -
+ curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC=" --flannel-iface=eth0" KINSTALL_K3S_VERSION="1.23.9+k3s1" 3S_URL=https://<master-ip>:6443 K3S_TOKEN=<mynodetoken> sh -
 
 sudo reboot
 ```
@@ -284,20 +284,16 @@ Confirm the internal IPs are as expected.
 `kubectl get nodes -o wide`
 
 ```
-NAME    STATUS   ROLES                  AGE     VERSION        INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                         KERNEL-VERSION   CONTAINER-RUNTIME
-pi101   Ready    control-plane,master   5m20s   v1.23.8+k3s2   10.1.2.101    <none>        Debian GNU/Linux 11 (bullseye)   5.15.32-v8+      containerd://1.5.13-k3s1
-pi107   Ready    <none>                 63s     v1.23.8+k3s2   10.1.2.107    <none>        Debian GNU/Linux 11 (bullseye)   5.15.32-v8+      containerd://1.5.13-k3s1
-pi105   Ready    <none>                 45s     v1.23.8+k3s2   10.1.2.105    <none>        Debian GNU/Linux 11 (bullseye)   5.15.32-v8+      containerd://1.5.13-k3s1
-pi103   Ready    <none>                 11s     v1.23.8+k3s2   10.1.2.103    <none>        Debian GNU/Linux 11 (bullseye)   5.15.32-v8+      containerd://1.5.13-k3s1
+NAME    STATUS   ROLES                  AGE   VERSION        INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                         KERNEL-VERSION   CONTAINER-RUNTIME
+pi103   Ready    <none>                 26h   v1.23.9+k3s1   10.1.2.103    <none>        Debian GNU/Linux 11 (bullseye)   5.15.32-v8+      containerd://1.5.13-k3s1
+pi107   Ready    <none>                 26h   v1.23.9+k3s1   10.1.2.107    <none>        Debian GNU/Linux 11 (bullseye)   5.15.32-v8+      containerd://1.5.13-k3s1
+pi105   Ready    <none>                 26h   v1.23.9+k3s1   10.1.2.105    <none>        Debian GNU/Linux 11 (bullseye)   5.15.32-v8+      containerd://1.5.13-k3s1
+pi101   Ready    control-plane,master   26h   v1.23.9+k3s1   10.1.2.101    <none>        Debian GNU/Linux 11 (bullseye)   5.15.32-v8+      containerd://1.5.13-k3s1
+
 ```
 
 ## Next Steps
 
 That's all for now. We have a working k3s cluster, but what do we want to do with it? 
 
-Next we will:
-
-1. Install a cluster monitoring dashboard
-2. Decide on a backup solution for the cluster
-3. Setup Spark / HDFS
-4. Start one of those tbd projects?
+Stay tuned...

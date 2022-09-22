@@ -1,5 +1,5 @@
 ---
-title: "Post: Setting up Kubernetes Cluster Infrastructure" 
+title: "Setting up Kubernetes Cluster Infrastructure" 
 categories:
   - Blog
 tags:

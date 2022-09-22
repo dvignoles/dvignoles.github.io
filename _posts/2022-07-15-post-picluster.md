@@ -1,5 +1,5 @@
 ---
-title: "Post: Raspberry Pi Kubernetes Cluster"
+title: "Building a Raspberry Pi Kubernetes Cluster"
 categories:
   - Blog
 tags:

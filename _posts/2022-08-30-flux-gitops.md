@@ -10,7 +10,7 @@ tags:
   - gitops
 ---
 
-## Intro
+> How to use GitOps for kubernetes using Flux!
 
 GitOps brings DevOps best practices, most notably version control, to your kubernetes infrastructure. The basic idea is that you define the desired state of your infrastructure in a git repository, and a controller reconciles your cluster with that repository accordingly. After wiping and recreating my cluster infrastructure a few times, I knew I wanted to learn this technology.
 

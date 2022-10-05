@@ -58,14 +58,18 @@ plugins:
 author:
   name   : "Daniel Vignoles"
   avatar : "/assets/images/bio-photo.jpg"
-  bio    : "Aspring data engineer, geospatial enthusiast, linux lovin' nerd!"
+  bio    : "Developer, geospatial enthusiast, linux lovin' nerd!"
   links:
-    - label: "Website"
+    - label: "Resume"
       icon: "fas fa-fw fa-link"
-      url: "https://"
+      url: "/assets/daniel_vignoles_resume.pdf"
+    #- label: "Website"
+    #  icon: "fas fa-fw fa-link"
+    #  url: "https://dvignoles.github.io"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
-      url: "https://github.com/"
+      url: "https://github.com/dvignoles"
+
 
 footer:
   links:

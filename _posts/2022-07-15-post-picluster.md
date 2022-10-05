@@ -12,6 +12,12 @@ tags:
 
 ![pi cluster](/assets/pi_cluster.jpg)
 
+[Part 1: Cluster Setup](/blog/post-picluster)
+
+[Part 2: Kubernetes Infrastructure](/blog/post-kubernetes-infrastructure)
+
+[Part 3: GitOps with Flux](/blog/post-flux-gitops)
+
 ## Motivation
 
 One my favorite experiences during undergrad was working on a university big data cluster running apache spark and hdfs. I decided to build my own cluster using raspberry pis in order to get more hands on experience with distributed computing, containerization, and devops. 
@@ -296,4 +302,4 @@ pi101   Ready    control-plane,master   26h   v1.23.9+k3s1   10.1.2.101    <none
 
 That's all for now. We have a working k3s cluster, but what do we want to do with it? 
 
-Stay tuned...
+Next: [Part 2: Kubernetes Infrastructure](/blog/post-kubernetes-infrastructure)
